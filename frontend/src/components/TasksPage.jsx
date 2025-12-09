@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllTasks, updateTask, deleteTask } from "../service/api.js";
+import { formatDate } from "../service/formatShowedData.js";
 import AddTaskForm from "./AddTaskForm.jsx";
 
 function TasksPage() {
@@ -10,11 +11,7 @@ function TasksPage() {
     const [editTitle, setEditTitle] = useState('');
     const [editStatus, setEditStatus] = useState('A faire');
 
-    useEffect(() => {
-        // fetch des tasks
-        fetchTasks();
-    }, []);
-
+    // fetch des tasks
     const fetchTasks = async () => {
         try {
             const data = await getAllTasks();
@@ -25,6 +22,10 @@ function TasksPage() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
 
    
     // suppression d'une task
@@ -47,6 +48,7 @@ function TasksPage() {
         setEditStatus(task.status);
     };
 
+    // sauvegarde d'une task
     const handleSaveEdit = async (id) => {
         try {
             await updateTask(id, editTitle, editStatus);
@@ -56,16 +58,6 @@ function TasksPage() {
             console.error("Erreur lors de la mise à jour:", error);
             alert('Erreur lors de la mise à jour de la tâche');
         }
-    };
-
-    const handleCancelEdit = () => {
-        setEditingTask(null);
-    };
-
-    const formatDate = (dateString) => {
-        if (!dateString) return 'Non définie';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR');
     };
 
     if (loading) {
@@ -98,7 +90,7 @@ function TasksPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {tasks.map((task) => (
-                            <div key={task.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+                            <div key={task.id} className="bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out p-6">
                                 {editingTask === task.id ? (
                                     <div className="space-y-4">
                                         <input
@@ -116,20 +108,12 @@ function TasksPage() {
                                             <option value="A faire">A faire</option>
                                             <option value="Fini">Fini</option>
                                         </select>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleSaveEdit(task.id)}
-                                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                            >
-                                                Enregistrer
-                                            </button>
-                                            <button
-                                                onClick={handleCancelEdit}
-                                                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-                                            >
-                                                Annuler
-                                            </button>
-                                        </div>
+                                        <button
+                                            onClick={() => handleSaveEdit(task.id)}
+                                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        >
+                                            Enregistrer
+                                        </button>
                                     </div>
                                 ) : (
                                     <>
