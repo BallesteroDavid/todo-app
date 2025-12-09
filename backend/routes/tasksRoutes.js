@@ -1,4 +1,4 @@
-import { getAllTasks, addTask, updateTask, deleteTask } from './services/taskService.js';
+import { getAllTasks, addTask, updateTask, deleteTask } from '../services/taskService.js';
 
 // La fonction reçoit la requête et la réponse
 export const handleTasksRoute = async (req, res, urlParts, parseBody) => {

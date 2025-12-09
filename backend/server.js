@@ -1,6 +1,6 @@
 import http from 'http';
 import dotenv from 'dotenv';
-import { handleTasksRoute } from './tasksRoutes.js';
+import { handleTasksRoute } from './routes/tasksRoutes.js';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
